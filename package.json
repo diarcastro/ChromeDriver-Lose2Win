@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "node node_modules/.bin/mocha ./tests/**/*.js -t 1500000"
   },
   "author": "Diego Castro <ing.diegocastro@gmail.com>",
   "license": "ISC",
