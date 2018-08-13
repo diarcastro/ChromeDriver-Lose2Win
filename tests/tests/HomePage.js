@@ -13,16 +13,20 @@ describe('Testing HomePage',() => {
         await homePage.destroy();
     });
 
-    // it(`Page title should be "Angular week"`, async() => {
-    //     await homePage.verifyTitle();
-    // });
-
+    it(`Page title should be "Angular week"`, async() => {
+        await homePage.verifyTitle();
+    });
+    
     it(`Skip button should by exist on tutorial's first page`, async() => {
         await homePage.skipButtonExistsAndIsVisible();
     });
 
     it(`Navigation buttons should by exist on tutorial's first page`, async() => {
         await homePage.navigationExistsAndIsVisible();
+    });
+
+    it(`Click on last navigation button must go to last tutorial page`, async() => {
+        await homePage.goToLastTutorialPage();
     });
 
 

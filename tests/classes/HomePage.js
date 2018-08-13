@@ -11,10 +11,11 @@ class HomePage extends Base {
     async initialize () {
         await super.initialize();
         await this.navigateTo(this.pageUrl);
-        this.selectors();
+        this.screenShotsPath += 'home-';
+        this.setSelectors();
     }
 
-    selectors () {
+    setSelectors () {
         this.selectors = {
             skipButton: By.css('body > ion-app > ng-component > ion-split-pane > ion-nav > page-tutorial > ion-header > ion-navbar > ion-buttons > button'),
             navigationButtons: By.css('body > ion-app > ng-component > ion-split-pane > ion-nav > page-tutorial > ion-content > div.scroll-content > ion-slides > div > div.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets'),
@@ -38,12 +39,25 @@ class HomePage extends Base {
         const isVisible = await this.isElementVisible(skipButton);
         assert.isDefined(isVisible, 'SkipButton was not visible! ' + isVisible);
     }
-    
+
     async navigationExistsAndIsVisible() {
         const navigation = await this.findElement(this.selectors.navigationButtons);
         assert.isDefined(navigation, 'navigation was not found!');
         const isVisible = await this.isElementVisible(navigation);
         assert.isDefined(isVisible, 'navigation was not visible! ' + isVisible);
+    }
+
+    async goToLastTutorialPage () {
+        const navigation = await this.findElement(this.selectors.navigationButtons);
+        await this.driver.sleep(500);
+        const navigationButtons = await navigation.findElements(By.css('button'));
+        const lastButton = navigationButtons[navigationButtons.length - 1];
+        await lastButton.click();
+        const classes = await lastButton.getAttribute('class');
+        const classExists = classes.indexOf('swiper-pagination-bullet-active') >= 0;
+        assert.isTrue(classExists, 'Button must contain the class "swiper-pagination-bullet-active"')
+        await this.takeScreenShot();
+        await this.driver.sleep(2000);
     }
 
 }
