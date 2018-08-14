@@ -27,6 +27,11 @@ describe('Testing HomePage',() => {
 
     it(`Click on last navigation button must go to last tutorial page`, async() => {
         await homePage.goToLastTutorialPage();
+        // await homePage.driver.sleep(2000);
+    });
+
+    it(`Click on skip button should go to conference schedule`, async() => {
+        await homePage.skipTutorial();
     });
 
 

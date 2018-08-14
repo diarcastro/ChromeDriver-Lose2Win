@@ -19,6 +19,7 @@ class HomePage extends Base {
         this.selectors = {
             skipButton: By.css('body > ion-app > ng-component > ion-split-pane > ion-nav > page-tutorial > ion-header > ion-navbar > ion-buttons > button'),
             navigationButtons: By.css('body > ion-app > ng-component > ion-split-pane > ion-nav > page-tutorial > ion-content > div.scroll-content > ion-slides > div > div.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets'),
+            searchInput: By.xpath('//*[@id="tabpanel-t1-0"]/page-schedule/ion-header/ion-toolbar/div[2]/ion-searchbar/div/input'),
         };
     }
 
@@ -39,14 +40,14 @@ class HomePage extends Base {
         const isVisible = await this.isElementVisible(skipButton);
         assert.isDefined(isVisible, 'SkipButton was not visible! ' + isVisible);
     }
-
+    
     async navigationExistsAndIsVisible() {
         const navigation = await this.findElement(this.selectors.navigationButtons);
         assert.isDefined(navigation, 'navigation was not found!');
         const isVisible = await this.isElementVisible(navigation);
         assert.isDefined(isVisible, 'navigation was not visible! ' + isVisible);
     }
-
+    
     async goToLastTutorialPage () {
         const navigation = await this.findElement(this.selectors.navigationButtons);
         await this.driver.sleep(500);
@@ -57,7 +58,15 @@ class HomePage extends Base {
         const classExists = classes.indexOf('swiper-pagination-bullet-active') >= 0;
         assert.isTrue(classExists, 'Button must contain the class "swiper-pagination-bullet-active"')
         await this.takeScreenShot();
-        await this.driver.sleep(2000);
+    }
+
+    
+    async skipTutorial () {
+        const skipButton = await this.findElement(this.selectors.skipButton);
+        skipButton.click();
+        await this.driver.sleep(500);
+        const currentUrl = await this.driver.getCurrentUrl();
+        assert.isTrue(currentUrl.indexOf('conference-schedule/schedule') >=0, 'The current url should contain "conference-schedule/schedule"' +  currentUrl);
     }
 
 }
