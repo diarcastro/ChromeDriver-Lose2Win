@@ -37,7 +37,6 @@ describe('Testing HomePage',() => {
         await homePage.skipTutorial(false);
         await homePage.searchConference('CSS');
         await homePage.sleep(3);
-
     });
 
 

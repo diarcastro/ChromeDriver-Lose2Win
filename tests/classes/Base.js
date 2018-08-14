@@ -1,4 +1,5 @@
-const {Builder, By, Key, until} = require('selenium-webdriver');
+const {Builder, By, Key, until, chromeOptions} = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 
 class Base {
@@ -8,9 +9,19 @@ class Base {
         this.screenShotsPath = './tests/screenshots/';
     }
 
-    async initialize () {
+    async initialize (mobileName/*  = 'iPhone 6/7/8' */) {
+        let chromeOptions = null;
+        if (mobileName) {
+            chromeOptions = new chrome.Options();
+            chromeOptions.setMobileEmulation({deviceName: mobileName});
+            // Responsive windows
+            // chromeOptions = new chrome.Options().windowSize({width: 375, height: 600});
+        }
+        
+        console.log('Stablishing chromeOptions', chromeOptions);
         this.driver = await new Builder()
             .forBrowser('chrome')
+            .setChromeOptions(chromeOptions || {})
             .build();
     }
 
