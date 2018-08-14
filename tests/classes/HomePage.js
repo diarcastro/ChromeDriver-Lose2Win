@@ -19,7 +19,8 @@ class HomePage extends Base {
         this.selectors = {
             skipButton: By.css('body > ion-app > ng-component > ion-split-pane > ion-nav > page-tutorial > ion-header > ion-navbar > ion-buttons > button'),
             navigationButtons: By.css('body > ion-app > ng-component > ion-split-pane > ion-nav > page-tutorial > ion-content > div.scroll-content > ion-slides > div > div.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets'),
-            searchInput: By.xpath('//*[@id="tabpanel-t1-0"]/page-schedule/ion-header/ion-toolbar/div[2]/ion-searchbar/div/input'),
+            searchInput: By.css('ion-searchbar > div > input'),
+            cssConference: By.css('div.scroll-content > ion-list > ion-item-group:not([hidden]) > ion-item-sliding:not([hidden])')
         };
     }
 
@@ -60,13 +61,30 @@ class HomePage extends Base {
         await this.takeScreenShot();
     }
 
-    
-    async skipTutorial () {
+    /**
+     * Click on skip Tutorial button
+     *
+     * @param {boolean} [doAssert=true]
+     * @memberof HomePage
+     */
+    async skipTutorial (doAssert = true) {
         const skipButton = await this.findElement(this.selectors.skipButton);
         skipButton.click();
-        await this.driver.sleep(500);
-        const currentUrl = await this.driver.getCurrentUrl();
-        assert.isTrue(currentUrl.indexOf('conference-schedule/schedule') >=0, 'The current url should contain "conference-schedule/schedule"' +  currentUrl);
+        await this.sleep(.5);
+        if(doAssert) {
+            const currentUrl = await this.driver.getCurrentUrl();
+            assert.isTrue(currentUrl.indexOf('conference-schedule/schedule') >=0, 'The current url should contain "conference-schedule/schedule"' +  currentUrl);
+        }
+    }
+
+    async searchConference (conferenceName) {
+        const input = await this.findElement(this.selectors.searchInput);
+        input.sendKeys(conferenceName);
+        await this.sleep(.5);
+        const conference = await this.findElement(this.selectors.cssConference);
+        const titleElement = await conference.findElement(By.css('h3'));
+        const title = await titleElement.getText();
+        assert.isTrue(title.indexOf(conferenceName) >= 0, 'Conference was not found!');
     }
 
 }

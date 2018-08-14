@@ -17,10 +17,16 @@ class Base {
     async navigateTo (url) {
         await this.driver.get(url);
     }
-
+    /**
+     * Return an DOM Element
+     *
+     * @param {*} element
+     * @returns {WebElement} Element found it
+     * @memberof Base
+     */
     async findElement (element) {
         try {
-            return await this.driver.wait(until.elementLocated(element));
+            return await this.driver.wait(until.elementLocated(element), this.timeOut);
         } catch(err) {
             return false;
         }
@@ -50,7 +56,11 @@ class Base {
         const screenshot = await this.driver.takeScreenshot();
         fs.writeFileSync(this.screenShotsPath + fileName, screenshot, 'base64');
         return screenshot;
-    } 
+    }
+
+    async sleep (seconds) {
+        return await this.driver.sleep(seconds * 1000);
+    }
 
     async destroy () {
         this.driver.quit();
